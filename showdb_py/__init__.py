@@ -6,7 +6,8 @@ import requests, time
 _user = ''
 _password = ''
 
-def checkIfLogged() -> bool: return (False if _user != '' and _password != '' else True)
+def checkIfLogged() -> bool:
+    return _user == '' or _password == ''
 
 
 def getDb() -> dict:
