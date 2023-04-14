@@ -20,16 +20,15 @@ def _redir(id):
     
 @app.route('/', methods=['GET', 'POST'])
 def _main_page():
-    if request.method == 'POST':
-        if recaptcha.verify():
-            while True:
-                url = ''.join(random.sample(string.ascii_letters, 5))
-                if url not in db.keys(): break
-            db[url] = request.form.get('link')
-            return render_template('generated.html', link=f'shortened.site/{url}')
-        else:
-            return render_template('register.html', message="You must complete the captcha.", prefill=request.form.get('link'))
-    return render_template('register.html')
+    if request.method != 'POST':
+        return render_template('register.html')
+    if not recaptcha.verify():
+        return render_template('register.html', message="You must complete the captcha.", prefill=request.form.get('link'))
+    while True:
+        url = ''.join(random.sample(string.ascii_letters, 5))
+        if url not in db.keys(): break
+    db[url] = request.form.get('link')
+    return render_template('generated.html', link=f'shortened.site/{url}')
     
 
 
